@@ -1,0 +1,27 @@
+include:
+  - docker-compose.yml
+services:
+  client:
+    build: client/
+    depends_on:
+      - server
+    restart: always
+    ports:
+      - "8080:80"
+
+  server:
+    build: ./
+    depends_on:
+      - db
+      - mailcatcher
+    restart: always
+    ports:
+      - "5248:8080"
+    environment:
+      - ConnectionStrings__AppDb=HOST=db;DB=postgres;UID=postgres;PWD=mysecret;PORT=5432;
+      - AppOptions__JwtSecret=dfKDL0Rq26AEQhdHBcQkOvMNjj9S8/thdKhTVzm3UDWXfJ0gePCuWyf48VK9/hk1ID4VHqZjXpYhinms1r+Khg==
+      - AppOptions__Address=http://localhost:8080
+      - AppOptions__SmtpServer=mailcatcher
+      - AppOptions__SmtpPort=1025
+      - AppOptions__SmtpEnableSsl=false
+      - AppOptions__SmtpSenderEmail=noreply@example.com

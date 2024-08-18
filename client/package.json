@@ -1,0 +1,47 @@
+{
+  "name": "client",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview",
+    "scaffold": "swagger-typescript-api --axios -p http://localhost:5088/api/swagger/v1/swagger.json -o ./src -n ./api.ts"
+  },
+  "dependencies": {
+    "@dicebear/collection": "^9.2.1",
+    "@dicebear/core": "^9.2.1",
+    "@hookform/resolvers": "^3.9.0",
+    "axios": "^1.7.2",
+    "jotai": "^2.9.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-hook-form": "^7.52.1",
+    "react-hot-toast": "^2.4.1",
+    "react-markdown": "^9.0.1",
+    "react-router-dom": "^6.25.1",
+    "react-syntax-highlighter": "^15.5.0",
+    "yup": "^1.4.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/typography": "^0.5.14",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "@types/react-syntax-highlighter": "^15.5.13",
+    "@typescript-eslint/eslint-plugin": "^7.15.0",
+    "@typescript-eslint/parser": "^7.15.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "autoprefixer": "^10.4.19",
+    "daisyui": "^4.12.10",
+    "eslint": "^8.57.0",
+    "eslint-plugin-react-hooks": "^4.6.2",
+    "eslint-plugin-react-refresh": "^0.4.7",
+    "postcss": "^8.4.40",
+    "swagger-typescript-api": "^13.0.14",
+    "tailwindcss": "^3.4.7",
+    "typescript": "^5.2.2",
+    "vite": "^5.3.4"
+  }
+}
