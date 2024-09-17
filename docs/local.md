@@ -36,6 +36,8 @@ Make sure you select "Application data".
 
 ![Create "Application data" credentials](./create-credentials.png)
 
+![Service account details](./create-credentials-service-name.png)
+
 You also need to create a repository in your Artifact Registry to store images.
 Search for "artifact repositories", select "Repositories".
 
@@ -73,7 +75,7 @@ format.
 1. Find you Artifact Registry repository
    1. Search "artifact repositories"
    2. Select "Repositories"
-   3. Click the name of your repository
+   3. Click the name of your repository (tutorial-backend)
 2. Click "Setup Instructions" and paste the command into your terminal.
 3. Click the copy icon next to repository path to copy a reference to it.
 
@@ -216,11 +218,16 @@ firebase init hosting
 Answer as shown here:
 
 ```
+? Please select an option: Use an existing project
+? Select a default Firebase project for this directory: deploy-tutorial
 ? What do you want to use as your public directory? client/dist
 ? Configure as a single-page app (rewrite all urls to /index.html)? Yes
 ? Set up automatic builds and deploys with GitHub? No
 ? File dist/index.html already exists. Overwrite? No
 ```
+
+_Notice: I called my Google Cloud project for "deploy-tutorial".
+Yours could be different._
 
 Before actually deploying, we need some way of letting the front-end know where
 to find the back-end.
@@ -240,12 +247,12 @@ We can configure Firebase Hosting to do the same.
 The cool thing about this setup, is that we don't have to go change the address
 for back-end (between localhost and Cloud Run service) whenever we are about to deploy.
 
-Change `client/firebase.json` to:
+Change `firebase.json` to:
 
 ```json
 {
   "hosting": {
-    "public": "dist",
+    "public": "client/dist",
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "rewrites": [
       {

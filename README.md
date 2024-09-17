@@ -57,6 +57,12 @@ URI format.
 jdbc:username@password://hostname:5432/database?sslmode=require
 ```
 
+Or:
+
+```
+jdbc:postgresql://hostname:5432/database?ssl=require&user=username&password=password
+```
+
 In .NET, a connection string is specified differently.
 
 ```
