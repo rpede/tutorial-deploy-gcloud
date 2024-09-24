@@ -71,8 +71,7 @@ Server=hostname;DB=database;UID=username;PWD=password;PORT=5432;SslMode=require
 
 Notice that you got a hostname, database, username and password in both cases.
 
-You will need to be able to convert the connection string you get from your
-database host to .NET format.
+You use this [**Connection-string Converter**](https://rpede.github.io/connection_strings/).
 
 ## Getting started
 
