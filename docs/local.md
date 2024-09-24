@@ -67,6 +67,10 @@ Create a new secret.
 Name it "AppDb".
 In the "Secret value" field, insert your PostgreSQL connection string in .NET
 format.
+If the connection string you have starts with `postgres://` or
+`jdbc:postgresql://` then you need to convert it to .NET format.
+To help, you can use this [**Connection-string
+Converter**](https://rpede.github.io/connection_strings/).
 
 ![Create a secret with DB connection string](./create-secret.png)
 
@@ -76,7 +80,8 @@ format.
    1. Search "artifact repositories"
    2. Select "Repositories"
    3. Click the name of your repository (tutorial-backend)
-2. Click "Setup Instructions" and paste the command into your terminal.
+2. Click "Setup Instructions" and paste the command it shows into your
+   terminal.
 3. Click the copy icon next to repository path to copy a reference to it.
 
 ![Artifact Registry repository](./artifact-repository.png)
@@ -85,7 +90,23 @@ _Note: the name of your project and repository will be different_
 
 We are now going to build an image locally and push it to the repository.
 
-_Note: use git-bash terminal_
+_Note: use git-bash terminal and navigate to your local clone of the
+repository._
+
+Before building a docker image for a .NET application you should make sure
+that `bin/` and `obj/` won't be included.
+
+```sh
+cat .dockerignore
+```
+
+Notice that `**/bin/` and `**/obj/` is in the output.
+The `.dockerignore` file tells docker to ignore those files that match the
+given patterns when executing `COPY` instructions found in `Dockerfile`.
+Having `bin/` and `obj/` files copied to the image will increase the size and
+can cause strange errors.
+
+Now, let's actually build and upload the image.
 
 ```sh
 IMAGE_REPO="replace with the reference you copied"
@@ -107,12 +128,11 @@ Then select the image you pushed in "Container image URL" field.
 
 In **Configure** section:
 
-- Enter a name for your service.
 - Set region to europe-west1
 
 **Authentication**
 
-Select "Allow unauthenticated invocations".
+- Select "Allow unauthenticated invocations".
 
 **CPU allocation and pricing**
 
@@ -128,8 +148,10 @@ period.
 You could lower the resources a bit if you want.
 
 The important setting is in "Variable & secrets" tab.
-Here you need to add a reference to the `AppDb` secret you created earlier.
-Set the name to `ConnectionStrings__AppDb`.
+Click "REFERENCE A SECRET" to add a reference to the `AppDb` secret you created
+earlier.
+Set the name to `ConnectionStrings__AppDb` and choose "Latest" in the version
+drop-down.
 
 ![Add environment variable for AppDb secret](./appdb-secret.png)
 
@@ -190,6 +212,14 @@ It's a simple [smoke-test](<https://en.wikipedia.org/wiki/Smoke_testing_(softwar
 If it doesn't work, you might be able to find some
 clues, by inspecting the logs for your Cloud Run service.
 
+Go to [Logs Explorer](https://console.cloud.google.com/logs/query) then type
+`resource.type="cloud_run_revision"` into the Query field towards the top of
+the page.
+
+![Query Cloud Run in Log Explorer](./log-explorer.png)
+
+The output below should give you some hints about what is wrong.
+
 ## Front-end
 
 We could also build a container for front-end and deploy it with Cloud Run, similar to what we just
@@ -218,12 +248,12 @@ firebase init hosting
 Answer as shown here:
 
 ```
-? Please select an option: Use an existing project
-? Select a default Firebase project for this directory: deploy-tutorial
+? Please select an option: Add Firebase to an existing Google Cloud Platform project
+? Select the Google Cloud Platform project you would like to add Firebase: (Deploy tutorial)
 ? What do you want to use as your public directory? client/dist
 ? Configure as a single-page app (rewrite all urls to /index.html)? Yes
 ? Set up automatic builds and deploys with GitHub? No
-? File dist/index.html already exists. Overwrite? No
+? File client/dist/index.html already exists. Overwrite? No
 ```
 
 _Notice: I called my Google Cloud project for "deploy-tutorial".
@@ -282,21 +312,32 @@ gcloud run services list
 
 If you get an error, it could be because you need to tell `gcloud` what project
 to look at.
-To fix this, go to <https://console.cloud.google.com>.
-Click the project drop-down between logo and search bar.
-Copy the ID.
-
-![Shows where to find project ID](./find-project-id.png)
-
-Then:
+To fix it you should run:
 
 ```sh
-gcloud config set project replace-this-with-your-project-id
-gcloud run services list
+gcloud init
 ```
 
-Here you can see service ID and region.
-Replace the values in the `firebase.json` file.
+Pick:
+
+```
+Pick configuration to use:
+ [1] Re-initialize this configuration [default] with new settings
+Select an account:
+ [1] <your email here>
+Pick cloud project to use:
+ [1] deploy-tutorial-...
+```
+
+Output should look like this:
+
+```
+   SERVICE  REGION        URL                                              LAST DEPLOYED BY   LAST DEPLOYED AT
+✔  server   europe-west1  https://server-xxxxxxxxxxx.europe-west1.run.app  <your email here>  2024-09-24T16:01:51.533286Z
+```
+
+Here, the `serviceId` is `"server"` and the `region` is `"europe-west1"`.
+Then go back and update the values in `firebase.json`.
 
 You can now deploy with:
 
