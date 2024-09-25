@@ -172,7 +172,7 @@ Edit the account with the name from the error.
 
 Then add the "Secret Manager Secret Accessor" role and "Save".
 
-![Adding secret assesor role](./edit-access.png)
+![Adding secret accessor role](./edit-access.png)
 
 Navigate back to your failing Cloud Run service.
 Click "Edit & deploy new revision".
