@@ -110,7 +110,7 @@ Now, let's actually build and upload the image.
 
 ```sh
 IMAGE_REPO="replace with the reference you copied"
-docker build . -t $IMAGE_REPO/server
+docker build --platform linux/amd64 . -t $IMAGE_REPO/server
 docker push $IMAGE_REPO/server
 ```
 
